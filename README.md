@@ -5,4 +5,4 @@ This specification was created as part of The Postman API Hack and provides a Op
 
 You can goto https://osssocial.postman.co to find the workspace with API collection , Tests and Mock Server for developing using this API specification. 
 
-You can get more projects about the hackathon and details at https://physcocode.com/category/postman/
+You can get more details about the hackathon and project at https://physcocode.com/category/postman/
