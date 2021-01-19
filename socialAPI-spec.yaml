@@ -41,7 +41,7 @@ paths:
 #-----------------
 # Get Single User
 #------------------
-  /users/{id}:
+  /users:
     get:
       summary: 'Returns details about a particular user'
       operationId: getUser
