@@ -1,0 +1,184 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Social Network API
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /user/register:
+    post:
+        summary: 'Register a new user'
+        operationId: register
+        requestBody:
+            description: 'User to add to system'
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/User'
+        responses:
+            '200':
+                description: 'User successfully added'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Success'
+                        example: 
+                            Success:
+                                summary: 'example of successfull response'
+                                value: 
+                                    code: 200
+                                    message: 'user successfully added'
+            default:
+                description: Unexpected error
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Error'
+
+
+  /user:
+    get:
+      summary: 'Returns details about a particular user'
+      operationId: listUser
+      tags:
+        - user
+      parameters:
+        - name: id
+          in: query
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: 'Sample response: Details about a user by ID'
+          headers:
+            x-next:
+              description: A link to the next page of responses
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    # User Schema , extra user information can be stored in user meta like DOB, city etc  
+    User:
+      type: object
+      required:
+        - id
+        - name
+        - username
+        - email
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 1
+        name:
+          type: string
+        username:
+            type: string
+        email:
+          type: string
+          format: email
+        meta:
+          type: object
+          additionalProperties: true  
+    # Post schema, all detail required to render post can be added in meta like discription, image url etc      
+    Post:
+      type: object
+      required:
+        - id
+        - owner
+        - visibility
+      properties:
+        id:
+          type: integer
+          format: int64
+        #id of owner(user) post is added by   
+        owner:
+          type: string
+        visibility:
+            type: string
+            enum: 
+                - public
+                - private
+                - limited
+        comment_count:
+            type: integer
+        like_count:
+            type: integer
+        meta:
+          type: object
+          additionalProperties: true  
+    #comment schema      
+    Comment:
+      type: object
+      required:
+        - id
+        - post
+        - owner
+        - comment
+      properties:
+        id:
+          type: integer
+          format: int64
+        # id of post comment is part of  
+        post:
+          type: integer
+        #id of owner(user) comment is done by   
+        owner:
+            type: string
+        #the actual comment    
+        body:
+          type: string
+    # Schema to store the list of people who likes the post
+    Like:
+      type: object
+      required:
+        - id
+        - post
+        - owner
+      properties:
+        id:
+          type: integer
+          format: int64
+        # id of post like is part of  
+        post:
+          type: integer
+        #id of owner(user) who liked the post
+        owner:
+            type: string
+
+    Success:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
