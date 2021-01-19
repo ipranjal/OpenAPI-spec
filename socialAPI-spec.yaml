@@ -5,10 +5,16 @@ info:
 servers:
   - url: 'http://localhost:3000'
 paths:
-  /user/register:
+
+######################### User Collection Starts here #####################
+
+#-----------------
+# User Register/Create API
+#------------------
+  /users:
     post:
-        summary: 'Register a new user'
-        operationId: register
+        summary: 'Create a new user'
+        operationId: createUser
         requestBody:
             description: 'User to add to system'
             content:
@@ -23,11 +29,8 @@ paths:
                         schema:
                             $ref: '#/components/schemas/Success'
                         example: 
-                            Success:
-                                summary: 'example of successfull response'
-                                value: 
-                                    code: 200
-                                    message: 'user successfully added'
+                            code: 200
+                            message: 'user successfully added'
             default:
                 description: Unexpected error
                 content:
@@ -35,10 +38,69 @@ paths:
                         schema:
                             $ref: '#/components/schemas/Error'
 
-
-  /user:
+#-----------------
+# Get Single User
+#------------------
+  /users/{id}:
     get:
       summary: 'Returns details about a particular user'
+      operationId: getUser
+      tags:
+        - user
+      parameters:
+        - name: id
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          description: 'Details about a user by ID'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                  Pranjal:
+                      value:
+                        id: 10
+                        name: 'Pranjal Pandey'
+                        username: 'physcocode'
+                        email: 'pranjal@corpusvision.com'
+                        meta: {
+                            gender: 'Male',
+                            city: 'Mumbai',
+                            country: 'India'
+                        }
+                  Ellie:
+                    value:
+                        id: 21
+                        name: 'Ellie D'
+                        username: 'its_ellie'
+                        email: 'ellie@gmail.com'
+                        meta: {
+                            gender: 'Female',
+                            city: 'New York',
+                            country: 'USA'
+                        }
+
+
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+#-----------------
+# Get Multiple user of site
+#------------------
+  /users:
+    get:
+      summary: 'Returns list of users based on limit and offset'
       operationId: listUser
       tags:
         - user
@@ -68,9 +130,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+################################# User Collection Ends Here ###############################                
+
 components:
   schemas:
-    # User Schema , extra user information can be stored in user meta like DOB, city etc  
+#--------------------   
+# Array of Users 
+#--------------------
+    Users:  
+        type: array
+        items:
+            $ref: '#/components/schemas/User'
+
+#-----------------------
+# User model  
+# extra user information can be stored in user meta like DOB, city etc 
+#------------------------ 
     User:
       type: object
       required:
@@ -90,10 +166,19 @@ components:
         email:
           type: string
           format: email
+        #meta can be used as object container to store any kind of information about user as per your application requires  
         meta:
           type: object
           additionalProperties: true  
-    # Post schema, all detail required to render post can be added in meta like discription, image url etc      
+          example: {
+              'DOB': '10/10/1997',
+              'City': 'mumbai'
+          }
+#-----------------------
+# Post model
+# All detail required to render post can be added in meta like discription, image url etc
+#-----------------------
+      
     Post:
       type: object
       required:
@@ -104,23 +189,41 @@ components:
         id:
           type: integer
           format: int64
+          minimum: 1
         #id of owner(user) post is added by   
         owner:
-          type: string
+          type: integer
+          format: int64
+          minimum: 1
+        created_at:
+            type: string
+            format: date-time
         visibility:
             type: string
+            # limited type can be used to represent post which is displayed ti only friends or followers etc
             enum: 
                 - public
                 - private
-                - limited
-        comment_count:
-            type: integer
-        like_count:
-            type: integer
+                - limited  
+        # meta holds all the property you would need to render the post in a view eg: status update, image url, video url etc    
+        # Note : meta SHOULD ALWAYS have 'type' field to determine post type , helps in binding status updates with renders 
         meta:
           type: object
+          properties:
+            type:
+                type: string
+          required:
+            - type
           additionalProperties: true  
-    #comment schema      
+          example: {
+              'type': 'image',
+              'status': 'i am a exaple status update',
+              'image': 'example.com/image.png' 
+          }
+    
+#-----------------------
+#comment model
+#------------------------    
     Comment:
       type: object
       required:
@@ -141,7 +244,10 @@ components:
         #the actual comment    
         body:
           type: string
-    # Schema to store the list of people who likes the post
+
+#-----------------------  
+# Model to store the list of people who likes the post
+#-----------------------
     Like:
       type: object
       required:
@@ -159,6 +265,9 @@ components:
         owner:
             type: string
 
+#-----------------------
+# Simple model to return on successful create operations
+#-----------------------
     Success:
       type: object
       required:
@@ -168,9 +277,15 @@ components:
         code:
           type: integer
           format: int32
+          minimum: 200
+          maximum: 201
         message:
           type: string
+          example: 'Post has been successfully added'
 
+#-----------------------
+# General Error return model
+#-----------------------
     Error:
       type: object
       required:
@@ -180,5 +295,37 @@ components:
         code:
           type: integer
           format: int32
+          minimum: 400
+          maximum: 511
         message:
           type: string
+
+  parameters:
+#-----------------------
+# Wherever offset is requires in list
+#-----------------------
+    offsetParam:      
+      name: offset
+      in: query
+      description: Number of items to skip before returning the results.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        default: 0
+#-----------------------
+# Wherever limit is required in list
+#-----------------------
+    limitParam:       
+      name: limit
+      in: query
+      description: Maximum number of items to return.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 100
+        default: 20
+      
