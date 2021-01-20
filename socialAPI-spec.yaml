@@ -253,7 +253,13 @@ paths:
                         schema:
                             $ref: '#/components/schemas/Error'
 
-################################# User Collection Ends Here ###############################                
+################################# User Collection Ends Here ###############################  
+
+################################ Post Collection Starts here #############################
+######## Post store object like 'the wall' of facebook eg staus update etc ###############
+
+
+################################# User Collection Ends Here ###############################  
 
 components:
   schemas:
