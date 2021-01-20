@@ -51,7 +51,7 @@ paths:
         - in: query
           name: type
           required: true
-          description: A comma-separated list of user IDs.
+          description: Type of user to be retrived.
           schema:
               type: string
               enum: 
@@ -255,7 +255,232 @@ paths:
 
 ################################# User Collection Ends Here ###############################  
 
-######################### User Collection Starts here #####################
+######################### Post Collection Starts here #####################
+# Posts are actual entity that keeps status update in text, image upload etc it is backbone of social network
+#-----------------
+# Create Post
+#------------------
+  /posts:
+    post:
+        summary: 'Create a new post'
+        operationId: createPost
+        requestBody:
+            description: 'Add Post to system'
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/Post'
+        responses:
+            '201':
+                description: 'Post Successfully Added'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Success'
+                        example: 
+                            code: 201
+                            message: 'post successfully created'
+            default:
+                description: Unexpected error
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Error'
+#-----------------
+# Get Multiple posts
+#------------------
+    get:
+      summary: 'Returns list of posts based on limit and offset'
+      operationId: listPost
+      tags:
+        - post
+      parameters:
+        - $ref: '#/components/parameters/offsetParam'
+        - $ref: '#/components/parameters/limitParam'
+        - in: query
+          name: type
+          required: true
+          description: type of possts to be retrived.
+          schema:
+              type: string
+              enum: 
+                  # Get all public post
+                  - all
+                  # Get posts of people followed by user
+                  - following
+                  # Get post of user both private and public
+                  - me
+      responses:
+        '200':
+          description: 'List of post'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Posts'
+              example: 
+                  - id: 21
+                    name: 'Ellie D'
+                    username: 'its_ellie'
+                    email: 'ellie@gmail.com'
+                    meta: {
+                        gender: 'Female',
+                        city: 'New York',
+                        country: 'USA'
+                    }
+                  - id: 10
+                    name: 'Pranjal Pandey'
+                    username: 'physcocode'
+                    email: 'pranjal@corpusvision.com'
+                    meta: {
+                        gender: 'Male',
+                        city: 'Mumbai',
+                        country: 'India'
+                    }
+                  - id: 10
+                    name: 'Vineet Singh'
+                    username: 'Veneed'
+                    email: 'vineet@corpusvision.com'
+                    meta: {
+                        gender: 'Male',
+                        city: 'Mumbai',
+                        country: 'India'
+                    }
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+#-----------------
+# Get Single Post
+#------------------
+  /posts/{id}:
+    get:
+      summary: 'Returns details about a particular post'
+      operationId: getPost
+      tags:
+        - post
+      parameters:
+        - name: id
+          in: path
+          description: ID of the post
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          description: 'Details about a post by its ID'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                  Pranjal:
+                      value:
+                        id: 10
+                        name: 'Pranjal Pandey'
+                        username: 'physcocode'
+                        email: 'pranjal@corpusvision.com'
+                        meta: {
+                            gender: 'Male',
+                            city: 'Mumbai',
+                            country: 'India'
+                        }
+                  Ellie:
+                    value:
+                        id: 21
+                        name: 'Ellie D'
+                        username: 'its_ellie'
+                        email: 'ellie@gmail.com'
+                        meta: {
+                            gender: 'Female',
+                            city: 'New York',
+                            country: 'USA'
+                        }
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+#-----------------
+# Update Single Post , Note: Currently editing post is not provided but maybe in future , open for discussion
+#------------------
+    # put:
+    #   summary: 'update detail about a single post'
+    #   operationId: updatePost
+    #   tags:
+    #     - post
+    #   parameters:
+    #     - name: id
+    #       in: path
+    #       description: ID of the post
+    #       required: true
+    #       schema:
+    #         type: integer
+    #         format: int64
+    #         minimum: 1
+    #   requestBody:
+    #       description: 'User to add to system'
+    #       content:
+    #         application/json:
+    #             schema:
+    #                 $ref: '#/components/schemas/Post'
+    #   responses:
+    #     '200':
+    #       description: 'Updated user detail'
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Post'
+           
+    #     default:
+    #       description: Unexpected error
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Error'
+
+#-----------------
+# Delete Single Post
+#------------------
+    delete:
+        summary: 'Delete a single post'
+        operationId: deletePost
+        parameters:
+            - name: id
+              in: path
+              description: ID of the post
+              required: true
+              schema:
+                type: integer
+                format: int64
+                minimum: 1
+        responses:
+            '200':
+                description: 'Post successfully deleted'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Success'
+                        example: 
+                            code: 200
+                            message: 'post successfully deleted'
+            default:
+                description: Unexpected error
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Error'
+
+
+
+########################## Post Collection Ends here ######################
 
 
 components:
