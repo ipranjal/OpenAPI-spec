@@ -22,7 +22,7 @@ paths:
                     schema:
                         $ref: '#/components/schemas/User'
         responses:
-            '200':
+            '201':
                 description: 'User successfully added'
                 content:
                     application/json:
@@ -46,25 +46,56 @@ paths:
       tags:
         - user
       parameters:
-        - name: id
-          in: query
-          description: ID of the user
+        - $ref: '#/components/parameters/offsetParam'
+        - $ref: '#/components/parameters/limitParam'
+        - in: query
+          name: type
           required: true
+          description: A comma-separated list of user IDs.
           schema:
-            type: integer
-            format: int32
+              type: string
+              enum: 
+                  # Get all users
+                  - all
+                  # Get users followed by current user
+                  - following
+                  # Get random user , Note: Offset wont work with this type
+                  - random
       responses:
         '200':
-          description: 'Sample response: Details about a user by ID'
-          headers:
-            x-next:
-              description: A link to the next page of responses
-              schema:
-                type: string
+          description: 'List of users'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/Users'
+              example: 
+                  - id: 21
+                    name: 'Ellie D'
+                    username: 'its_ellie'
+                    email: 'ellie@gmail.com'
+                    meta: {
+                        gender: 'Female',
+                        city: 'New York',
+                        country: 'USA'
+                    }
+                  - id: 10
+                    name: 'Pranjal Pandey'
+                    username: 'physcocode'
+                    email: 'pranjal@corpusvision.com'
+                    meta: {
+                        gender: 'Male',
+                        city: 'Mumbai',
+                        country: 'India'
+                    }
+                  - id: 10
+                    name: 'Vineet Singh'
+                    username: 'Veneed'
+                    email: 'vineet@corpusvision.com'
+                    meta: {
+                        gender: 'Male',
+                        city: 'Mumbai',
+                        country: 'India'
+                    }
         default:
           description: Unexpected error
           content:
@@ -130,8 +161,68 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+#-----------------
+# Update Single User
+#------------------
+    put:
+      summary: 'update detail about a single user'
+      operationId: updateUser
+      tags:
+        - user
+      parameters:
+        - name: id
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      requestBody:
+          description: 'User to add to system'
+          content:
+            application/json:
+                schema:
+                    $ref: '#/components/schemas/User'
+      responses:
+        '204':
+          description: 'Updated user detail'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                  Pranjal:
+                      value:
+                        id: 10
+                        name: 'Pranjal P'
+                        username: 'physcocode'
+                        email: 'pranjal@corpusvision.com'
+                        meta: {
+                            gender: 'Male',
+                            city: 'Mumbai',
+                            country: 'India'
+                        }
+                  Ellie:
+                    value:
+                        id: 21
+                        name: 'Ellie Don'
+                        username: 'its_ellie'
+                        email: 'ellie@gmail.com'
+                        meta: {
+                            gender: 'Female',
+                            city: 'New York',
+                            country: 'USA'
+                        }
 
-   
+
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 ################################# User Collection Ends Here ###############################                
 
 components:
@@ -241,10 +332,13 @@ components:
           type: integer
         #id of owner(user) comment is done by   
         owner:
-            type: string
+            type: integer
         #the actual comment    
         body:
           type: string
+        created_at:
+            type: string
+            format: date-time
 
 #-----------------------  
 # Model to store the list of people who likes the post
@@ -259,12 +353,54 @@ components:
         id:
           type: integer
           format: int64
+          minimum: 1
         # id of post like is part of  
         post:
           type: integer
         #id of owner(user) who liked the post
         owner:
+            type: integer
+        created_at:
             type: string
+            format: date-time
+
+#-----------------------  
+# Model to store data in activity feed
+#-----------------------
+    Feed:
+        type: object
+        required:
+            - id
+            - owner
+            - action
+            - object
+            - type
+        properties:
+            id:
+                type: integer
+                format: int64
+                minimum: 1
+          #id of owner(user) who performed action
+            owner:
+                type: integer
+          #type of action performed (Verb)     
+            action:
+                type: string
+          #id of object the action is performed on (Object can be other user,post etc)
+            object:
+                 type: integer 
+          #type of activity (can be used to determine how to render feed in view)    
+            type:
+                 type: string
+ 
+        example:
+            # This is an exapmple of Pranjal (id:10) followed Vineet (id:20)
+            id: 5
+            owner: 10
+            action: 'followed'
+            object: 20 
+            type: 'follow'
+             
 
 #-----------------------
 # Simple model to return on successful create operations
