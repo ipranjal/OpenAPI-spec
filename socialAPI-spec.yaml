@@ -9,9 +9,9 @@ paths:
 ######################### User Collection Starts here #####################
 
 #-----------------
-# User Register/Create API
+# API to creat post
 #------------------
-  /users:
+  /posts:
     post:
         summary: 'Create a new user'
         operationId: createUser
@@ -257,6 +257,251 @@ paths:
 
 ################################ Post Collection Starts here #############################
 ######## Post store object like 'the wall' of facebook eg staus update etc ###############
+
+#-----------------
+# User Register/Create API
+#------------------
+  /users:
+    post:
+        summary: 'Create a new user'
+        operationId: createUser
+        requestBody:
+            description: 'User to add to system'
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/User'
+        responses:
+            '201':
+                description: 'User successfully added'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Success'
+                        example: 
+                            code: 201
+                            message: 'user successfully created'
+            default:
+                description: Unexpected error
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Error'
+#-----------------
+# Get Multiple users
+#------------------
+    get:
+      summary: 'Returns list of users based on limit and offset'
+      operationId: listUser
+      tags:
+        - user
+      parameters:
+        - $ref: '#/components/parameters/offsetParam'
+        - $ref: '#/components/parameters/limitParam'
+        - in: query
+          name: type
+          required: true
+          description: A comma-separated list of user IDs.
+          schema:
+              type: string
+              enum: 
+                  # Get all users
+                  - all
+                  # Get users followed by current user
+                  - following
+                  # Get random user , Note: Offset wont work with this type
+                  - random
+      responses:
+        '200':
+          description: 'List of users'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users'
+              example: 
+                  - id: 21
+                    name: 'Ellie D'
+                    username: 'its_ellie'
+                    email: 'ellie@gmail.com'
+                    meta: {
+                        gender: 'Female',
+                        city: 'New York',
+                        country: 'USA'
+                    }
+                  - id: 10
+                    name: 'Pranjal Pandey'
+                    username: 'physcocode'
+                    email: 'pranjal@corpusvision.com'
+                    meta: {
+                        gender: 'Male',
+                        city: 'Mumbai',
+                        country: 'India'
+                    }
+                  - id: 10
+                    name: 'Vineet Singh'
+                    username: 'Veneed'
+                    email: 'vineet@corpusvision.com'
+                    meta: {
+                        gender: 'Male',
+                        city: 'Mumbai',
+                        country: 'India'
+                    }
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+#-----------------
+# Get Single User
+#------------------
+  /users/{id}:
+    get:
+      summary: 'Returns details about a particular user'
+      operationId: getUser
+      tags:
+        - user
+      parameters:
+        - name: id
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          description: 'Details about a user by ID'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                  Pranjal:
+                      value:
+                        id: 10
+                        name: 'Pranjal Pandey'
+                        username: 'physcocode'
+                        email: 'pranjal@corpusvision.com'
+                        meta: {
+                            gender: 'Male',
+                            city: 'Mumbai',
+                            country: 'India'
+                        }
+                  Ellie:
+                    value:
+                        id: 21
+                        name: 'Ellie D'
+                        username: 'its_ellie'
+                        email: 'ellie@gmail.com'
+                        meta: {
+                            gender: 'Female',
+                            city: 'New York',
+                            country: 'USA'
+                        }
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+#-----------------
+# Update Single User
+#------------------
+    put:
+      summary: 'update detail about a single user'
+      operationId: updateUser
+      tags:
+        - user
+      parameters:
+        - name: id
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      requestBody:
+          description: 'User to add to system'
+          content:
+            application/json:
+                schema:
+                    $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: 'Updated user detail'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                  Pranjal:
+                      value:
+                        id: 10
+                        name: 'Pranjal P'
+                        username: 'physcocode'
+                        email: 'pranjal@corpusvision.com'
+                        meta: {
+                            gender: 'Male',
+                            city: 'Mumbai',
+                            country: 'India'
+                        }
+                  Ellie:
+                    value:
+                        id: 21
+                        name: 'Ellie Don'
+                        username: 'its_ellie'
+                        email: 'ellie@gmail.com'
+                        meta: {
+                            gender: 'Female',
+                            city: 'New York',
+                            country: 'USA'
+                        }
+
+
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+#-----------------
+# Delete Single User
+#------------------
+    delete:
+        summary: 'Delete a single user'
+        operationId: deleteUser
+        parameters:
+            - name: id
+              in: path
+              description: ID of the user
+              required: true
+              schema:
+                type: integer
+                format: int64
+                minimum: 1
+        responses:
+            '200':
+                description: 'User successfully deleted'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Success'
+                        example: 
+                            code: 200
+                            message: 'user successfully deleted'
+            default:
+                description: Unexpected error
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Error'
 
 
 ################################# User Collection Ends Here ###############################  
