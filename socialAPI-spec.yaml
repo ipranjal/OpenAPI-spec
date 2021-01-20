@@ -29,8 +29,8 @@ paths:
                         schema:
                             $ref: '#/components/schemas/Success'
                         example: 
-                            code: 200
-                            message: 'user successfully added'
+                            code: 201
+                            message: 'user successfully created'
             default:
                 description: Unexpected error
                 content:
@@ -152,8 +152,6 @@ paths:
                             city: 'New York',
                             country: 'USA'
                         }
-
-
         default:
           description: Unexpected error
           content:
@@ -185,7 +183,7 @@ paths:
                 schema:
                     $ref: '#/components/schemas/User'
       responses:
-        '204':
+        '200':
           description: 'Updated user detail'
           content:
             application/json:
@@ -222,6 +220,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+#-----------------
+# Delete Single User
+#------------------
+    delete:
+        summary: 'Delete a single user'
+        operationId: deleteUser
+        parameters:
+            - name: id
+              in: path
+              description: ID of the user
+              required: true
+              schema:
+                type: integer
+                format: int64
+                minimum: 1
+        responses:
+            '200':
+                description: 'User successfully deleted'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Success'
+                        example: 
+                            code: 200
+                            message: 'user successfully deleted'
+            default:
+                description: Unexpected error
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Error'
 
 ################################# User Collection Ends Here ###############################                
 
