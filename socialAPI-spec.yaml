@@ -73,6 +73,7 @@ paths:
                     name: 'Ellie D'
                     username: 'its_ellie'
                     email: 'ellie@gmail.com'
+                    img: 'exapmle.com/ellie/profile.png'
                     meta: {
                         gender: 'Female',
                         city: 'New York',
@@ -82,6 +83,7 @@ paths:
                     name: 'Pranjal Pandey'
                     username: 'physcocode'
                     email: 'pranjal@corpusvision.com'
+                    img: 'exapmle.com/physcocode/profile.png'
                     meta: {
                         gender: 'Male',
                         city: 'Mumbai',
@@ -91,6 +93,7 @@ paths:
                     name: 'Vineet Singh'
                     username: 'Veneed'
                     email: 'vineet@corpusvision.com'
+                    img: 'exapmle.com/veneed/profile.png'
                     meta: {
                         gender: 'Male',
                         city: 'Mumbai',
@@ -136,6 +139,7 @@ paths:
                         name: 'Pranjal Pandey'
                         username: 'physcocode'
                         email: 'pranjal@corpusvision.com'
+                        img: 'exapmle.com/physcocode/profile.png'
                         meta: {
                             gender: 'Male',
                             city: 'Mumbai',
@@ -147,6 +151,7 @@ paths:
                         name: 'Ellie D'
                         username: 'its_ellie'
                         email: 'ellie@gmail.com'
+                        img: 'exapmle.com/ellie/profile.png'
                         meta: {
                             gender: 'Female',
                             city: 'New York',
@@ -196,6 +201,7 @@ paths:
                         name: 'Pranjal P'
                         username: 'physcocode'
                         email: 'pranjal@corpusvision.com'
+                        img: 'exapmle.com/physcocode/profile.png'
                         meta: {
                             gender: 'Male',
                             city: 'Mumbai',
@@ -207,6 +213,7 @@ paths:
                         name: 'Ellie Don'
                         username: 'its_ellie'
                         email: 'ellie@gmail.com'
+                        img: 'exapmle.com/ellie/profile.png'
                         meta: {
                             gender: 'Female',
                             city: 'New York',
@@ -316,35 +323,80 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Posts'
-              example: 
-                  - id: 21
-                    name: 'Ellie D'
-                    username: 'its_ellie'
-                    email: 'ellie@gmail.com'
-                    meta: {
-                        gender: 'Female',
-                        city: 'New York',
-                        country: 'USA'
+                $ref: '#/components/schemas/GetPosts'
+              example:
+                  #image type post
+                  - id: 13
+                    type: "Image"
+                    owner: {
+                        id: 10,
+                        name: "Pranjal Pandey",
+                        username: "physcocoede",
+                        image: "example.com/physcocode/profile.png"
                     }
-                  - id: 10
-                    name: 'Pranjal Pandey'
-                    username: 'physcocode'
-                    email: 'pranjal@corpusvision.com'
+                    created_at: "2017-07-21T17:32:28Z"
+                    visibility: public
                     meta: {
-                        gender: 'Male',
-                        city: 'Mumbai',
-                        country: 'India'
+                        'status': 'I am a example status update with image',
+                        'image': 'example.com/image.png' 
                     }
-                  - id: 10
-                    name: 'Vineet Singh'
-                    username: 'Veneed'
-                    email: 'vineet@corpusvision.com'
+                    like_count: 9
+                    comment_count: 12
+                    #text type post
+                  - id: 19
+                    type: "Text"
+                    owner: {
+                        id: 10,
+                        name: "Pranjal Pandey",
+                        username: "physcocoede",
+                        image: "example.com/physcocode/profile.png"
+                    }
+                    created_at: "2017-07-21T17:32:28Z"
+                    visibility: public
                     meta: {
-                        gender: 'Male',
-                        city: 'Mumbai',
-                        country: 'India'
+                        'status': 'I am a example of text status update !',
                     }
+                    like_count: 22
+                    comment_count: 4
+                    #video type post
+                  - id: 33
+                    type: "Video"
+                    owner: {
+                        id: 12,
+                        name: "Vineet Singh",
+                        username: "vineed",
+                        image: "example.com/vineed/profile.png"
+                    }
+                    created_at: "2017-07-21T17:32:28Z"
+                    visibility: public
+                    meta: {
+                        'status': 'I am a example of text status update !',
+                        'video': 'example.com/video.mp4'
+                    }
+                    like_count: 22
+                    comment_count: 4
+                    #slideshow type post
+                  - id: 23
+                    type: "Slideshow"
+                    owner: {
+                        id: 12,
+                        name: "Vineet Singh",
+                        username: "vineed",
+                        image: "example.com/vineed/profile.png"
+                    }
+                    created_at: "2017-07-21T17:32:28Z"
+                    visibility: public
+                    meta: {
+                        'status': 'I am a example of slideshow update !',
+                        'image': [
+                            'example.com/image1.png',
+                            'example.com/image2.png',
+                            'example.com/image3.png'
+                        ]
+                    }
+                    like_count: 28
+                    comment_count: 9
+                                                           
         default:
           description: Unexpected error
           content:
@@ -377,30 +429,90 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/GetPost'
               examples:
-                  Pranjal:
+                  image:
+                      summary: 'Example of Image type post'
                       value:
-                        id: 10
-                        name: 'Pranjal Pandey'
-                        username: 'physcocode'
-                        email: 'pranjal@corpusvision.com'
-                        meta: {
-                            gender: 'Male',
-                            city: 'Mumbai',
-                            country: 'India'
+                        id: 13
+                        type: "Image"
+                        owner: {
+                            id: 10,
+                            name: "Pranjal Pandey",
+                            username: "physcocoede",
+                            image: "example.com/physcocode/profile.png"
                         }
-                  Ellie:
-                    value:
-                        id: 21
-                        name: 'Ellie D'
-                        username: 'its_ellie'
-                        email: 'ellie@gmail.com'
+                        created_at: "2017-07-21T17:32:28Z"
+                        visibility: public
                         meta: {
-                            gender: 'Female',
-                            city: 'New York',
-                            country: 'USA'
+                            'status': 'I am a example status update with image',
+                            'image': 'example.com/image.png' 
                         }
+                        like_count: 9
+                        comment_count: 12
+                    #text type post
+                  text:
+                      summary: 'Example of text type post'
+                      value:
+                        id: 19
+                        type: "Text"
+                        owner: {
+                            id: 10,
+                            name: "Pranjal Pandey",
+                            username: "physcocoede",
+                            image: "example.com/physcocode/profile.png"
+                        }
+                        created_at: "2017-07-21T17:32:28Z"
+                        visibility: public
+                        meta: {
+                            'status': 'I am a example of text status update !',
+                        }
+                        like_count: 22
+                        comment_count: 4
+                  
+                  video:
+                      summary: 'Example of video type post'
+                      value:
+                        id: 33
+                        type: "Video"
+                        owner: {
+                            id: 12,
+                            name: "Vineet Singh",
+                            username: "vineed",
+                            image: "example.com/vineed/profile.png"
+                        }   
+                        created_at: "2017-07-21T17:32:28Z"
+                        visibility: public
+                        meta: {
+                           'status': 'I am a example of text status update !',
+                            'video': 'example.com/video.mp4'
+                        }
+                        like_count: 22
+                        comment_count: 4
+                  slideshow:
+                      summary: 'slideshow type of post'
+                      value:
+                        id: 23
+                        type: "Slideshow"
+                        owner: {
+                            id: 12,
+                            name: "Vineet Singh",
+                            username: "vineed",
+                            image: "example.com/vineed/profile.png"
+                        }
+                        created_at: "2017-07-21T17:32:28Z"
+                        visibility: public
+                        meta: {
+                            'status': 'I am a example of slideshow update !',
+                            'image': [
+                                'example.com/image1.png',
+                                'example.com/image2.png',
+                                'example.com/image3.png'
+                            ]
+                        }
+                        like_count: 28
+                        comment_count: 9
+                  
         default:
           description: Unexpected error
           content:
@@ -482,6 +594,37 @@ paths:
 
 ########################## Post Collection Ends here ######################
 
+######################### Comment and Likes Collection Starts here ####################
+  /comments:
+     post:
+        summary: 'Create a comment and attach to post' 
+        operationId: createComment
+        requestBody:
+            description: 'Add Post to system'
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/Comment'
+        responses:
+            '200':
+                description: 'Comment Successfuly added'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Success'
+                        example: 
+                            code: 200
+                            message: 'comment Successfuly Added
+            default:
+                description: Unexpected error
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Error'
+                
+
+######################### Comment and Likes Collection Ends here #####################
+
 
 components:
   schemas:
@@ -516,6 +659,9 @@ components:
         email:
           type: string
           format: email
+        #profile pic of user  
+        img:
+           type: string   
         #meta can be used as object container to store any kind of information about user as per your application requires  
         meta:
           type: object
@@ -524,11 +670,22 @@ components:
               'DOB': '10/10/1997',
               'City': 'mumbai'
           }
+      example: 
+            id: 21
+            name: 'Ellie D'
+            username: 'its_ellie'
+            email: 'ellie@gmail.com'
+            img: 'exapmle.com/ellie/profile.png'
+            meta: {
+                gender: 'Female',
+                city: 'New York',
+                country: 'USA'
+            }
 #-----------------------
 # Post model
 # All detail required to render post can be added in meta like discription, image url etc
-#-----------------------
-      
+#-----------------------      
+    
     Post:
       type: object
       required:
@@ -540,6 +697,10 @@ components:
           type: integer
           format: int64
           minimum: 1
+        #type of post (image,text,video etc) 
+        type:
+            type: string
+            example: 'image'
         #id of owner(user) post is added by   
         owner:
           type: integer
@@ -559,18 +720,120 @@ components:
         # Note : meta SHOULD ALWAYS have 'type' field to determine post type , helps in binding status updates with renders 
         meta:
           type: object
-          properties:
-            type:
-                type: string
-          required:
-            - type
           additionalProperties: true  
           example: {
-              'type': 'image',
+              'status': 'i am a example status update',
+              'image': 'example.com/image.png' 
+          }
+      example: 
+        id: 10
+        type: 'image'
+        owner: 10
+        created_at: "2017-07-21T17:32:28Z"
+        visibility: public
+        meta: {
+            'status': 'I am a example status update with image',
+            'image': 'example.com/image.png' 
+        }
+
+#--------------------   
+# Array of Posts to display 
+#--------------------
+    GetPosts:  
+        type: array
+        items:
+            $ref: '#/components/schemas/GetPost'
+
+#-----------------------
+# Post model returned on get request to 
+# All detail required to render post can be found in meta like discription, image url etc
+#-----------------------
+      
+    GetPost:
+      type: object
+      required:
+        - id
+        - owner
+        - visibility
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 1
+        type:
+            type: string
+            example : 'image'  
+        # Details of owner to be rendered on display 
+        owner:
+          type: object
+          properties: 
+            id:
+                type: integer
+                format: int64
+                minimum: 1
+            name:
+                type: string
+            username:
+                type: string
+            #profile_pic of user
+            img:
+                type: string            
+        created_at:
+            type: string
+            format: date-time
+        visibility:
+            type: string
+            # limited type can be used to represent post which is displayed ti only friends or followers etc
+            enum: 
+                - public
+                - private
+                - limited  
+        #no. of likes on post
+        like_count: 
+            type: integer
+            format: int64
+            minimum: 1  
+        #no. of comments on post
+        comment_count: 
+            type: integer
+            format: int64
+            minimum: 1          
+        # meta holds all the property you would need to render the post in a view eg: status update, image url, video url etc    
+        # Note : meta SHOULD ALWAYS have 'type' field to determine post type , helps in binding status updates with renders 
+        meta:
+          type: object
+          additionalProperties: true  
+          example: {
               'status': 'i am a exaple status update',
               'image': 'example.com/image.png' 
           }
-    
+      example:
+          id: 10
+          type: "Image"
+          owner: {
+              id: 10,
+              name: "Pranjal Pandey",
+              username: "physcocoede",
+              image: "example.com/physcocode/profile.png"
+           }
+          created_at: "2017-07-21T17:32:28Z"
+          visibility: public
+          meta: {
+            'status': 'I am a example status update with image',
+            'image': 'example.com/image.png' 
+          }
+          like_count: 9
+          comment_count: 12
+
+
+#--------------------   
+# Array of comments to display 
+#--------------------
+    Comments:  
+        type: array
+        items:
+            $ref: '#/components/schemas/Comment'
+
 #-----------------------
 #comment model
 #------------------------    
@@ -597,6 +860,20 @@ components:
         created_at:
             type: string
             format: date-time
+      example:
+          id: 23
+          post: 32
+          owner: 10
+          body: "i like this post"
+          created_at: "2017-07-21T17:32:28Z" 
+
+#--------------------   
+# Array of likes to display 
+#--------------------
+    Likes:  
+        type: array
+        items:
+            $ref: '#/components/schemas/Like'
 
 #-----------------------  
 # Model to store the list of people who likes the post
@@ -621,11 +898,15 @@ components:
         created_at:
             type: string
             format: date-time
+      example:
+          id: 10  
+          post: 25
+          owner: 10
 
 #-----------------------  
 # Model to store data in activity feed
 #-----------------------
-    Feed:
+    Activity:
         type: object
         required:
             - id
@@ -658,8 +939,63 @@ components:
             action: 'followed'
             object: 20 
             type: 'follow'
-             
+#--------------------   
+# Array of Feeds to display 
+#--------------------
+    GetActivitiess:  
+        type: array
+        items:
+            $ref: '#/components/schemas/GetActivity'
 
+
+#-----------------------  
+# Model to get data to render activity feed in view
+# Message can be rendered by using 'owner.name + action + object.type/object.name
+# Eg: msg could be 'Pranjal liked Image' 
+#-----------------------
+    GetActivity:
+        type: object
+        required:
+            - id
+            - owner
+            - action
+            - object
+            - type
+        properties:
+            id:
+                type: integer
+                format: int64
+                minimum: 1
+          #id of owner(user) who performed action
+            owner:
+                type: object
+                properties: 
+                    id:
+                        type: integer
+                        format: int64
+                        minimum: 1
+                    name:
+                        type: string
+                    username:
+                        type: string
+            #profile_pic of user
+                    img:
+                        type: string   
+                                
+          #type of action performed (Verb)     
+            action:
+                type: string
+                example: 'liked'
+          #post object if the action is performed on post, user object if action is performed on other user
+            object:
+                 oneOf:
+                    - $ref: '#/components/schemas/User'
+                    - $ref: '#/components/schemas/GetPost'
+          #type of activity (can be used to determine how to render feed in view)    
+            type:
+                 type: string
+ 
+     
 #-----------------------
 # Simple model to return on successful create operations
 #-----------------------
@@ -677,23 +1013,30 @@ components:
         message:
           type: string
           example: 'Post has been successfully added'
+      example:
+        code: 200
+        message: 'Object have been successfully added'   
 
 #-----------------------
 # General Error return model
 #-----------------------
     Error:
-      type: object
-      required:
-        - code
-        - message
-      properties:
-        code:
-          type: integer
-          format: int32
-          minimum: 400
-          maximum: 511
-        message:
-          type: string
+        type: object
+        required:
+            - code
+            - message
+        properties:
+            code:
+                type: integer
+                format: int32
+                minimum: 400
+                maximum: 511
+            message:
+                type: string
+        example: 
+          code: 500
+          message: 'Oops something went wrong !'
+              
 
   parameters:
 #-----------------------
