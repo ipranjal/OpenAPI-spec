@@ -621,7 +621,46 @@ paths:
                     application/json:
                         schema:
                             $ref: '#/components/schemas/Error'
-                
+     get:
+         summary: 'get comments of a post'
+         operationId: getComment
+         parameters:
+            - in: query
+              name: post_id
+              required: true
+              description: Type of user to be retrived.
+              schema:
+                type: integer
+         responses:
+            '200':
+                description: 'List comment for a post'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Comments'
+                        example: 
+                            - id: 23
+                              post: 32
+                              owner: 10
+                              body: "I like this post"
+                              created_at: "2017-07-21T17:32:28Z"
+                            - id: 24
+                              post: 32
+                              owner: 21
+                              body: "This post seems great"
+                              created_at: "2017-07-21T17:32:28Z"
+                            - id: 25
+                              post: 32
+                              owner: 14
+                              body: "Hahah this is funny"
+                              created_at: "2017-07-21T17:32:28Z"  
+            default:
+                description: Unexpected error
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Error'
+
 
 ######################### Comment and Likes Collection Ends here #####################
 
