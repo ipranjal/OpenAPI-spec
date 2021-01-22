@@ -906,7 +906,7 @@ components:
 #-----------------------  
 # Model to store data in activity feed
 #-----------------------
-    Activity:
+    Feed:
         type: object
         required:
             - id
@@ -942,10 +942,10 @@ components:
 #--------------------   
 # Array of Feeds to display 
 #--------------------
-    GetActivitiess:  
+    GetFeeds:  
         type: array
         items:
-            $ref: '#/components/schemas/GetActivity'
+            $ref: '#/components/schemas/GetFeed'
 
 
 #-----------------------  
@@ -953,7 +953,7 @@ components:
 # Message can be rendered by using 'owner.name + action + object.type/object.name
 # Eg: msg could be 'Pranjal liked Image' 
 #-----------------------
-    GetActivity:
+    GetFeed:
         type: object
         required:
             - id
