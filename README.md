@@ -18,6 +18,8 @@ You can get more details about the hackathon and project at https://physcocode.c
 1) **User** - to store and retrieve user data
 2) **Post** - this is the basic backbone of social feature, a post can be anything from short tweets, to image based post 
 3) **Feed** - this is used to store interaction between users , user and post and other activity of users. Eg : X likes a post , X is now friends with Y etc. These activities can then be displayed on feed
-4) **UserRelation** - this stores relation between two users , this can be used to implement relations like 'friends', 'follow' or something as complex as 'circles' that was introduced by Google +
-5) **Message** - this stores messeges sent in groups or 1-1 interaction
-6) **MessageRoom** - this stores the messaging rooms , rooms can be 1-1 messaging rooms or group message rooms. Message rooms are where messages are exchanged
+4) **Like** - store list of all user who likes a particular post
+5) **Comments** - store all the comments for a post
+6) **UserRelation** - this stores relation between two users , this can be used to implement relations like 'friends', 'follow' or something as complex as 'circles' that was introduced by Google +
+7) **Message** - this stores messeges sent in groups or 1-1 interaction
+8) **MessageRoom** - this stores the messaging rooms , rooms can be 1-1 messaging rooms or group message rooms. Message rooms are where messages are exchanged
