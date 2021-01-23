@@ -1124,7 +1124,7 @@ paths:
           summary: 'delete a single message'
           operationId: deleteMessage
           parameters:
-            - in: query
+            - in: path
               name: id
               required: true
               description: id of message to delete
