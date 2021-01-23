@@ -774,37 +774,51 @@ paths:
 # Get all likes of the post
 #------------------
      get:
-         summary: 'get comments of a post'
-         operationId: getComment
+         summary: 'get likes of a post'
+         operationId: getLike
          parameters:
             - in: query
               name: post_id
               required: true
-              description: Type of user to be retrived.
+              description: id of post whose likes need to be retrived
               schema:
                 type: integer
          responses:
             '200':
-                description: 'List comment for a post'
+                description: 'List user that likes post'
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/Comments'
+                            $ref: '#/components/schemas/GetLikes'
                         example: 
-                            - id: 23
-                              post: 32
-                              owner: 10
-                              body: "I like this post"
-                              created_at: "2017-07-21T17:32:28Z"
-                            - id: 24
-                              post: 32
-                              owner: 21
-                              body: "This post seems great"
-                              created_at: "2017-07-21T17:32:28Z"
-                            - id: 25
-                              post: 32
-                              owner: 14
-                              body: "Hahah this is funny"
+                            - id: 10  
+                              post: 25
+                              owner: {
+                                id: 10,
+                                name: "Pranjal Pandey",
+                                username: "physcocoede",
+                                image: "example.com/physcocode/profile.png"
+                              }
+                              created_at: "2017-07-21T17:32:28Z" 
+
+                            - id: 13 
+                              post: 25
+                              owner: {
+                                id: 12,
+                                name: "Ellie D",
+                                username: "its_ellie",
+                                image: "example.com/ellie/profile.png"
+                                }
+                              created_at: "2017-07-21T17:32:28Z" 
+                               
+                            - id: 23 
+                              post: 25
+                              owner: {
+                                id: 15,
+                                name: "Vineet Singh",
+                                username: "vineed",
+                                image: "example.com/vineed/profile.png"
+                                }
                               created_at: "2017-07-21T17:32:28Z"  
             default:
                 description: Unexpected error
@@ -813,9 +827,222 @@ paths:
                         schema:
                             $ref: '#/components/schemas/Error'
 
+#-----------------
+# Unlike a post / Delete Like
+#------------------
+     delete:
+        summary: 'Unlike a post' 
+        operationId: unlike
+        parameters:
+            - name: post_id
+              in: query
+              description: ID of post
+              required: true
+              schema:
+                type: integer
+                format: int64
+                minimum: 1
+            - name: user_id
+              in: query
+              description: ID of user 
+              required: true
+              schema:
+                type: integer
+                format: int64
+                minimum: 1    
+        responses:
+            '200':
+                description: 'Post successfully unliked'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Success'
+                        example: 
+                            code: 200
+                            message: 'Post successfully unliked'
+            default:
+                description: Unexpected error
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Error'
 
 
 ######################### Comment and Likes Collection Ends here #####################
+
+######################### API collection to work with user relations  #########################
+#-----------------
+# Create relation between two user
+# Relations can be anything from friends to follow or as complex as circles introduced by google+
+#------------------  
+  /relations:
+     post:
+        summary: 'Create new relation between two users' 
+        operationId: createRelations
+        requestBody:
+            description: 'Information about users and type of relation'
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/UserRelation'
+        responses:
+            '200':
+                description: 'Relation successfully created'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Success'
+                        example: 
+                            code: 200
+                            message: 'Relation successfully created'
+            default:
+                description: Unexpected error
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Error'
+#-----------------
+# Get all likes of the post
+#------------------
+     get:
+         summary: 'get all relation of a user'
+         operationId: getRelations
+         parameters:
+            - in: query
+              name: user_id
+              required: true
+              description: id of users whose relations is to be listed
+              schema:
+                type: integer
+         responses:
+            '200':
+                description: 'List user that are related to current user'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GetUserRelations'
+                        example: 
+                            - id: 10  
+                              owner: 25
+                              user: {
+                                id: 10,
+                                name: "Pranjal Pandey",
+                                username: "physcocoede",
+                                image: "example.com/physcocode/profile.png"
+                              }
+                              type: 'follow'
+                              bidirectional: false
+                              created_at: "2017-07-21T17:32:28Z"
+                              meta: {} 
+
+                            - id: 13 
+                              owner: 25
+                              user: {
+                                id: 12,
+                                name: "Ellie D",
+                                username: "its_ellie",
+                                image: "example.com/ellie/profile.png"
+                                }
+                              type: 'follow'
+                              bidirectional: false
+                              created_at: "2017-07-21T17:32:28Z"
+                              meta: {} 
+                               
+                            - id: 23 
+                              owner: 25
+                              user: {
+                                id: 15,
+                                name: "Vineet Singh",
+                                username: "vineed",
+                                image: "example.com/vineed/profile.png"
+                                }
+                              type: 'follow'
+                              bidirectional: false  
+                              created_at: "2017-07-21T17:32:28Z"
+                              meta: {}  
+            default:
+                description: Unexpected error
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Error'
+
+#-----------------
+# Delete the relations bettwen user
+# This is to perform action like unfollow or unfriend
+#------------------
+     delete:
+        summary: 'Remove relation between users' 
+        operationId: unlike
+        parameters:
+            - name: owner_id
+              in: query
+              description: ID of user who is owner of relation ("Followed by")
+              required: true
+              schema:
+                type: integer
+                format: int64
+                minimum: 1
+            - name: user_id
+              in: query
+              description: ID of user whom the owner is related to ("Followed to")
+              required: true
+              schema:
+                type: integer
+                format: int64
+                minimum: 1    
+        responses:
+            '200':
+                description: 'Relation successfully removed'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Success'
+                        example: 
+                            code: 200
+                            message: 'Relation successfully removed '
+            default:
+                description: Unexpected error
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Error'
+  
+
+######################### API collection to work with user relations Ends here #####################
+
+######################### API collection to work with messages #####################
+#-----------------
+# Send message to a room
+#------------------
+  /messages:
+     post:
+        summary: 'Send message to a room' 
+        operationId: createRelations
+        requestBody:
+            description: 'Information about users and type of relation'
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/UserRelation'
+        responses:
+            '200':
+                description: 'Relation successfully created'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Success'
+                        example: 
+                            code: 200
+                            message: 'Relation successfully created'
+            default:
+                description: Unexpected error
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Error'
+
+######################### End of API collection to work with messages #####################
 
 
 components:
@@ -875,7 +1102,7 @@ components:
             }
 
 #-----------------------
-# User detailssummary to be embedded into get request  
+# User details summary to be embedded into get request  
 #------------------------ 
     UserSummary:
       type: object
@@ -901,7 +1128,99 @@ components:
             name: 'Ellie D'
             username: 'its_ellie'
             img: 'exapmle.com/ellie/profile.png'
-           
+        
+#-----------------------
+# User relations
+# This model can be used to create friends, follow and other relation between users
+#------------------------ 
+    UserRelation:
+        type: object
+        required:
+            - id
+            - owner
+            - user
+            - type
+        properties:
+            id:
+                type: integer
+                format: int64
+                minimum: 1
+            #id of user who is creating relation
+            owner:
+                type: integer
+            #id of user whome owner is following    
+            user:
+                type: integer
+            #type of relation eg: follow, friend, connection etc    
+            type:
+                type: string
+            # is relation bidirectional like friends or unidirectional like follow ?    
+            bidirectional:
+                type: boolean
+            #any other meta you want to store about relation    
+            meta:
+                type: object
+                additionalProperties: true 
+        example:
+            id: 11
+            owner: 10
+            user: 12
+            type: 'follow'
+            bidirectional: false
+            meta: {
+
+            }       
+#--------------------   
+# Array of UserRelations
+#--------------------
+    GetUserRelations:  
+        type: array
+        items:
+            $ref: '#/components/schemas/GetUserRelation'                
+#-----------------------
+# Model to get list of related users
+#------------------------ 
+    GetUserRelation:
+        type: object
+        required:
+            - id
+            - owner
+            - user
+            - type
+        properties:
+            id:
+                type: integer
+                format: int64
+                minimum: 1
+            owner:
+                type: integer
+            user:
+                $ref: '#/components/schemas/UserSummary'
+            type:
+                type: string
+            # is relation bidirectional like friends or unidirectional like follow ?    
+            bidirectional:
+                type: boolean
+            #any other meta you want to store about relation    
+            meta:
+                type: object
+                additionalProperties: true 
+        example:
+            id: 11
+            owner: 10
+            user: {
+                id: 12,
+                name: 'Vineet Singh',
+                username: 'vineed',
+                img: 'example.com/vineed/profile.png'
+            }
+            type: 'friend'
+            bidirectional: true
+            meta: {
+             accepted: true
+            }
+          
+
 
 #-----------------------
 # Post model
@@ -1150,7 +1469,14 @@ components:
       example:
           id: 10  
           post: 25
-          owner: 10
+          owner: {
+              id: 10,
+              name: "Pranjal Pandey",
+              username: "physcocoede",
+              image: "example.com/physcocode/profile.png"
+           }
+          created_at: "2017-07-21T17:32:28Z" 
+
 
 #-----------------------  
 # Model to store the list of people who likes the post
@@ -1217,6 +1543,8 @@ components:
             action: 'followed'
             object: 20 
             type: 'follow'
+            created_at: "2017-07-21T17:32:28Z" 
+
 #--------------------   
 # Array of Feeds to display 
 #--------------------
@@ -1246,20 +1574,8 @@ components:
                 minimum: 1
           #id of owner(user) who performed action
             owner:
-                type: object
-                properties: 
-                    id:
-                        type: integer
-                        format: int64
-                        minimum: 1
-                    name:
-                        type: string
-                    username:
-                        type: string
-            #profile_pic of user
-                    img:
-                        type: string   
-                                
+                $ref: '#/components/schemas/UserSummary'
+                                 
           #type of action performed (Verb)     
             action:
                 type: string
@@ -1272,8 +1588,70 @@ components:
           #type of activity (can be used to determine how to render feed in view)    
             type:
                  type: string
- 
-     
+#---------------------------
+# Model to create message rooms(Chat rooms) where message can be exchanged
+# Message room can be both 1-1 and group
+#--------------------------- 
+    MessageRoom:
+        type: object
+        properties:
+            id:
+                type: integer
+                format: int64
+                minimum: 1
+            type:
+                type: string
+                enum:
+                    - single
+                    - group
+            #id of user who created the room (imp for group rooms)
+            owner: 
+                type: integer
+            # other user in room string for 1-1 and array for group    
+            users:
+                oneOf:
+                    - type: string
+                    - type: array 
+        example:
+            id: 12
+            type: 'single'
+            owner: 12
+            users: 21    
+
+#--------------------   
+# Array of likes to display 
+#--------------------
+    Messages:  
+        type: array
+        items:
+            $ref: '#/components/schemas/Message'
+#---------------------------
+# Model to store message
+#--------------------------- 
+    Message:
+        type: object
+        properties:
+            id:
+                type: integer
+                format: int64
+                minimum: 1
+            #id of message room the message is part of    
+            room:
+                type: integer               
+            #id of user who sent message
+            owner: 
+                type: integer
+            # other user in room string for 1-1 and array for group    
+            message: 
+                type: string
+
+        example:
+            id: 12
+            room: 32
+            owner: 12
+            message: 'Hi whats up ?'                           
+
+
 #-----------------------
 # Simple model to return on successful create operations
 #-----------------------
@@ -1316,10 +1694,10 @@ components:
           message: 'Oops something went wrong !'
               
 
-  parameters:
 #-----------------------
 # Wherever offset is requires in list
 #-----------------------
+  parameters:
     offsetParam:      
       name: offset
       in: query
