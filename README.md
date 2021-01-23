@@ -3,9 +3,13 @@ Open API 3.0 spec for creating social networking API
 
 This specification was created as part of **The Postman API Hack** and provides a **OpenAPI 3.0** specification for creating Social Networking API, using these API's you can create a social networking website like Facebook, Twitter
 
-You can goto https://osssocial.postman.co to find the workspace with API collection , Tests and Mock Server for developing using this API specification. 
+You can goto  to find the workspace with API collection , Tests and Mock Server for developing using this API specification. 
 
-You can get more details about the hackathon and project at https://physcocode.com/category/postman/
+
+## Refrence Link
+1) Blog Posts about the project and hackathon - https://physcocode.com/category/postman/
+2) You can find the public workspace here - https://osssocial.postman.co
+3) API design concept - https://physcocode.com/ossn-api-open-source-social-networking-api-design-concept/
 
 ### This specification defines implementaion of following API:
 1) **User API collection** - Collection of API's to manage users
