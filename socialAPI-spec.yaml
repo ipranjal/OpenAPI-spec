@@ -595,6 +595,9 @@ paths:
 ########################## Post Collection Ends here ######################
 
 ######################### Comment and Likes Collection Starts here ####################
+#-----------------
+# Create new comment
+#------------------ 
   /comments:
      post:
         summary: 'Create a comment and attach to post' 
@@ -621,6 +624,9 @@ paths:
                     application/json:
                         schema:
                             $ref: '#/components/schemas/Error'
+#-----------------
+# Get all comments of a post
+#------------------
      get:
          summary: 'get comments of a post'
          operationId: getComment
@@ -660,6 +666,153 @@ paths:
                     application/json:
                         schema:
                             $ref: '#/components/schemas/Error'
+
+#-----------------
+# Delete Single Comment
+#------------------
+  /comments/{id}:
+     delete:
+        summary: 'Create a comment and attach to post' 
+        operationId: deleteComment
+        parameters:
+            - name: id
+              in: path
+              description: ID of the comment
+              required: true
+              schema:
+                type: integer
+                format: int64
+                minimum: 1
+        responses:
+            '200':
+                description: 'Comment Successfuly deleted'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Success'
+                        example: 
+                            code: 200
+                            message: 'comment Successfuly Deleted'
+            default:
+                description: Unexpected error
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Error'
+#-----------------
+# Update a Comment
+#------------------
+     put:
+         summary: 'Update a comment'
+         operationId: updateComment
+         parameters:
+            - name: id
+              in: path
+              description: ID of the comment
+              required: true
+              schema:
+                type: integer
+                format: int64
+                minimum: 1
+         requestBody:
+             description: 'Add Post to system'
+             content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/Comment'
+         responses:
+            '200':
+                description: 'Comment after being updated'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Comment'
+                        example: 
+                             id: 23
+                             post: 32
+                             owner: 10
+                             body: "The updated comment"
+                             created_at: "2017-07-21T17:32:28Z"
+                           
+            default:
+                description: Unexpected error
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Error'
+
+#-----------------
+# Like a post
+#------------------ 
+  /likes:
+     post:
+        summary: 'Like a post' 
+        operationId: like
+        requestBody:
+            description: 'Add Like to post'
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/Like'
+        responses:
+            '200':
+                description: 'Post successfully liked'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Success'
+                        example: 
+                            code: 200
+                            message: 'Post successfully liked'
+            default:
+                description: Unexpected error
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Error'
+#-----------------
+# Get all likes of the post
+#------------------
+     get:
+         summary: 'get comments of a post'
+         operationId: getComment
+         parameters:
+            - in: query
+              name: post_id
+              required: true
+              description: Type of user to be retrived.
+              schema:
+                type: integer
+         responses:
+            '200':
+                description: 'List comment for a post'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Comments'
+                        example: 
+                            - id: 23
+                              post: 32
+                              owner: 10
+                              body: "I like this post"
+                              created_at: "2017-07-21T17:32:28Z"
+                            - id: 24
+                              post: 32
+                              owner: 21
+                              body: "This post seems great"
+                              created_at: "2017-07-21T17:32:28Z"
+                            - id: 25
+                              post: 32
+                              owner: 14
+                              body: "Hahah this is funny"
+                              created_at: "2017-07-21T17:32:28Z"  
+            default:
+                description: Unexpected error
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Error'
+
 
 
 ######################### Comment and Likes Collection Ends here #####################
@@ -720,6 +873,36 @@ components:
                 city: 'New York',
                 country: 'USA'
             }
+
+#-----------------------
+# User detailssummary to be embedded into get request  
+#------------------------ 
+    UserSummary:
+      type: object
+      required:
+        - id
+        - name
+        - username
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 1
+        name:
+          type: string
+        username:
+            type: string
+        img:
+           type: string   
+        #meta can be used as object container to store any kind of information about user as per your application requires  
+
+      example: 
+            id: 21
+            name: 'Ellie D'
+            username: 'its_ellie'
+            img: 'exapmle.com/ellie/profile.png'
+           
+
 #-----------------------
 # Post model
 # All detail required to render post can be added in meta like discription, image url etc
@@ -804,19 +987,7 @@ components:
             example : 'image'  
         # Details of owner to be rendered on display 
         owner:
-          type: object
-          properties: 
-            id:
-                type: integer
-                format: int64
-                minimum: 1
-            name:
-                type: string
-            username:
-                type: string
-            #profile_pic of user
-            img:
-                type: string            
+          $ref: '#/components/schemas/UserSummary'
         created_at:
             type: string
             format: date-time
@@ -868,10 +1039,44 @@ components:
 #--------------------   
 # Array of comments to display 
 #--------------------
-    Comments:  
+    GetComments:  
         type: array
         items:
-            $ref: '#/components/schemas/Comment'
+            $ref: '#/components/schemas/GetComment'
+
+#-----------------------
+# Get comment with user deetails to be displayed
+#------------------------    
+    GetComment:
+      type: object
+      required:
+        - id
+        - post
+        - owner
+        - comment
+      properties:
+        id:
+          type: integer
+          format: int64
+        # id of post comment is part of  
+        post:
+          type: integer
+        #id of owner(user) comment is done by   
+        owner:
+            $ref: '#/components/schemas/UserSummary'
+        #the actual comment    
+        body:
+          type: string
+        created_at:
+            type: string
+            format: date-time
+      example:
+          id: 23
+          post: 32
+          owner: 10
+          body: "i like this post"
+          created_at: "2017-07-21T17:32:28Z" 
+
 
 #-----------------------
 #comment model
@@ -909,10 +1114,48 @@ components:
 #--------------------   
 # Array of likes to display 
 #--------------------
-    Likes:  
+    GetLikes:  
         type: array
         items:
-            $ref: '#/components/schemas/Like'
+            $ref: '#/components/schemas/GetLike'
+
+#-----------------------  
+# Model to list people who liked the post
+#-----------------------
+    GetLike:
+      type: object
+      required:
+        - id
+        - post
+        - owner
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 1
+        # id of post like is part of  
+        post:
+          type: integer
+        #id of owner(user) who liked the post
+        owner:
+                type: object
+                properties: 
+                    id:
+                        type: integer
+                        format: int64
+                        minimum: 1
+                    name:
+                        type: string
+                    username:
+                        type: string
+
+        created_at:
+            type: string
+            format: date-time
+      example:
+          id: 10  
+          post: 25
+          owner: 10
 
 #-----------------------  
 # Model to store the list of people who likes the post
@@ -941,6 +1184,7 @@ components:
           id: 10  
           post: 25
           owner: 10
+          created_at: "2017-07-21T17:32:28Z" 
 
 #-----------------------  
 # Model to store data in activity feed
