@@ -1018,29 +1018,75 @@ paths:
   /messages:
      post:
         summary: 'Send message to a room' 
-        operationId: createRelations
+        operationId: createMessages
         requestBody:
-            description: 'Information about users and type of relation'
+            description: 'Message to send'
             content:
                 application/json:
                     schema:
-                        $ref: '#/components/schemas/UserRelation'
+                        $ref: '#/components/schemas/Message'
         responses:
             '200':
-                description: 'Relation successfully created'
+                description: 'Message Successfully sent'
                 content:
                     application/json:
                         schema:
                             $ref: '#/components/schemas/Success'
                         example: 
                             code: 200
-                            message: 'Relation successfully created'
+                            message: 'Message Successfully sent'
             default:
                 description: Unexpected error
                 content:
                     application/json:
                         schema:
                             $ref: '#/components/schemas/Error'
+
+#-----------------
+# Get all messages of a room
+#------------------
+     get:
+         summary: 'get all messages of a room'
+         operationId: getMessages
+         parameters:
+            - in: query
+              name: room_id
+              required: true
+              description: id of room whose message to get
+              schema:
+                type: integer
+         responses:
+            '200':
+                description: 'List of messages in a room'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Messages'
+                        example: 
+                            - id: 13 
+                              room: 25
+                              owner: 12
+                              created_at: "2017-07-21T17:32:28Z"
+                              message: "Hi" 
+
+                            - id: 16 
+                              room: 25
+                              owner: 13
+                              created_at: "2017-07-21T17:32:28Z"
+                              message: "Hey, wassup?" 
+                               
+                            - id: 18 
+                              room: 25
+                              owner: 12
+                              created_at: "2017-07-21T17:32:28Z"
+                              message: "I am good"
+            default:
+                description: Unexpected error
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Error'
+
 
 ######################### End of API collection to work with messages #####################
 
@@ -1619,7 +1665,7 @@ components:
             users: 21    
 
 #--------------------   
-# Array of likes to display 
+# Array of messages to display 
 #--------------------
     Messages:  
         type: array
@@ -1644,6 +1690,9 @@ components:
             # other user in room string for 1-1 and array for group    
             message: 
                 type: string
+            created_at:
+                type: string
+                format: date-time
 
         example:
             id: 12
