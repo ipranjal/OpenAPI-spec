@@ -1571,7 +1571,7 @@ components:
         - id
         - post
         - owner
-        - comment
+        - body
       properties:
         id:
           type: integer
