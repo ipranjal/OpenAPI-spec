@@ -762,7 +762,7 @@ paths:
                         schema:
                             $ref: '#/components/schemas/Success'
                         example: 
-                            code: 200
+                            code: 201
                             message: 'Post successfully liked'
             default:
                 description: Unexpected error
