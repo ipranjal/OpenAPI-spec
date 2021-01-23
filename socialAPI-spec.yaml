@@ -893,7 +893,7 @@ paths:
                         schema:
                             $ref: '#/components/schemas/Success'
                         example: 
-                            code: 200
+                            code: 201
                             message: 'Relation successfully created'
             default:
                 description: Unexpected error
