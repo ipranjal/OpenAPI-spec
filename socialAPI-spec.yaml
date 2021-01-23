@@ -1146,7 +1146,61 @@ paths:
                     application/json:
                         schema:
                             $ref: '#/components/schemas/Error'
-              
+#-----------------
+# Create a room
+#------------------  
+  /messages/rooms:
+      post:
+        summary: 'Create a new Room' 
+        operationId: createRoom
+        requestBody:
+            description: 'Detail about room including users'
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/MessageRoom'
+        responses:
+            '201':
+                description: 'Room successfully created'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Success'
+                        example: 
+                            code: 200
+                            message: 'Room successfully created'
+            default:
+                description: Unexpected error
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Error'
+      delete:
+          summary: 'delete a room'
+          operationId: deleteRoom
+          parameters:
+            - in: query
+              name: id
+              required: true
+              description: id of room to delete
+              schema:
+                type: integer
+          responses:
+            '200':
+                description: 'Successfully deleted room'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Success'
+                        example:
+                            code: 200
+                            message: 'Successfully deleted room'                             
+            default:
+                description: Unexpected error
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Error'        
                 
 ######################### End of API collection to work with messages #####################
 
