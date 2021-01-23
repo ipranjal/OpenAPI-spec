@@ -27,3 +27,5 @@ You can goto  to find the workspace with API collection , Tests and Mock Server 
 6) **UserRelation** - this stores relation between two users , this can be used to implement relations like 'friends', 'follow' or something as complex as 'circles' that was introduced by Google +
 7) **Message** - this stores messeges sent in groups or 1-1 interaction
 8) **MessageRoom** - this stores the messaging rooms , rooms can be 1-1 messaging rooms or group message rooms. Message rooms are where messages are exchanged
+
+This project is created by Pranjal Pandey and is available under MIT license
