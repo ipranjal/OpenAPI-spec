@@ -8,8 +8,9 @@ You can goto  to find the workspace with API collection , Tests and Mock Server 
 
 ## Refrence Link
 1) Blog Posts about the project and hackathon - https://physcocode.com/category/postman/
-2) You can find the public workspace here - https://osssocial.postman.co
-3) API design concept - https://physcocode.com/ossn-api-open-source-social-networking-api-design-concept/
+2) Document explaining the API's can be found here - https://documenter.getpostman.com/view/1722111/TW6tLq53
+3) You can find the public workspace here - https://pranjalshop.postman.co
+4) API design concept - https://physcocode.com/ossn-api-open-source-social-networking-api-design-concept/
 
 ### This specification defines implementaion of following API:
 1) **User API collection** - Collection of API's to manage users
