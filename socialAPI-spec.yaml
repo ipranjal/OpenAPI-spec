@@ -1204,6 +1204,146 @@ paths:
                 
 ######################### End of API collection to work with messages #####################
 
+######################### API collection for Activity Feed #####################
+#-----------------
+# Create a new Activity
+#------------------
+  /feeds:
+     post:
+        summary: 'Creat new Activity in Feed' 
+        operationId: createFeed
+        requestBody:
+            description: 'Activity Feed to add'
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/Feed'
+        responses:
+            '201':
+                description: 'Feed successfully added'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Success'
+                        example: 
+                            code: 200
+                            message: 'Message Successfully sent'
+            default:
+                description: Unexpected error
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Error'
+
+#-----------------
+# Get all activities in feed
+#------------------
+     get:
+         summary: 'get all acrivities in feed'
+         operationId: getFeeds
+         parameters:
+            - in: query
+              name: type
+              required: true
+              description: type of feed
+              schema:
+                type: string
+                enum: 
+                  # Get all public post
+                  - all
+                  # Get posts of people followed by user
+                  - following
+                  # Get post of user both private and public
+                  - me
+         responses:
+            '200':
+                description: 'List of Activities in feed'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GetFeeds'
+                        example: 
+                          - id: 12
+                            owner: {
+                                 id: 10,
+                                 name: 'Pranjal Pandey',
+                                 username: physcocode
+                            }
+                            action: 'liked'
+                            object: {
+                                id: 10,
+                                type: "Image",
+                                owner: {
+                                id: 10,
+                                name: "Pranjal Pandey",
+                                username: "physcocoede",
+                                image: "example.com/physcocode/profile.png"
+                                },
+                                created_at: "2017-07-21T17:32:28Z",
+                                visibility: public,
+                                meta: {
+                                    'status': 'I am a example status update with image',
+                                    'image': 'example.com/image.png' 
+                                },
+                                like_count: 9,
+                                comment_count: 12,
+                                }
+                            type: 'like'
+
+                          - id: 13
+                            owner: {
+                                 id: 10,
+                                 name: 'Pranjal Pandey',
+                                 username: physcocode
+                            }
+                            action: 'followed'
+                            object: {
+                                 id: 12,
+                                 name: 'Vineet Singh',
+                                 username: vineed
+                            }
+                            type: 'follow'
+
+                           
+            default:
+                description: Unexpected error
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Error'
+
+#-----------------
+# Delete an activity from feed
+#------------------  
+  /feeds/{id}:
+      delete:
+          summary: 'delete an activity from feed'
+          operationId: deleteFeed
+          parameters:
+            - in: path
+              name: id
+              required: true
+              description: id of feed activity to delete
+              schema:
+                type: integer
+          responses:
+            '200':
+                description: 'Successfully deleted activity from feed'
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Success'
+                        example:
+                            code: 200
+                            message: 'Successfully deleted activity from feed'                             
+            default:
+                description: Unexpected error
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Error'
+
+######################### End of API collection for Activity Feed #####################
 
 components:
   schemas:
@@ -1749,11 +1889,38 @@ components:
           #post object if the action is performed on post, user object if action is performed on other user
             object:
                  oneOf:
-                    - $ref: '#/components/schemas/User'
+                    - $ref: '#/components/schemas/UserSummary'
                     - $ref: '#/components/schemas/GetPost'
           #type of activity (can be used to determine how to render feed in view)    
             type:
                  type: string
+        example:
+            id: 12
+            owner: {
+                id: 10,
+                name: 'Pranjal Pandey',
+                username: physcocode
+            }
+            action: 'liked'
+            object: {
+                id: 10,
+                type: "Image",
+                owner: {
+                    id: 10,
+                    name: "Pranjal Pandey",
+                    username: "physcocoede",
+                    image: "example.com/physcocode/profile.png"
+                 },
+                created_at: "2017-07-21T17:32:28Z",
+                visibility: public,
+                meta: {
+                     'status': 'I am a example status update with image',
+                     'image': 'example.com/image.png' 
+                 },
+                like_count: 9,
+                comment_count: 12,
+            }
+            type: 'like'
 #---------------------------
 # Model to create message rooms(Chat rooms) where message can be exchanged
 # Message room can be both 1-1 and group
