@@ -1888,9 +1888,8 @@ components:
                 example: 'liked'
           #post object if the action is performed on post, user object if action is performed on other user
             object:
-                 oneOf:
-                    - $ref: '#/components/schemas/UserSummary'
-                    - $ref: '#/components/schemas/GetPost'
+                type: object
+                additionalProperties: true
           #type of activity (can be used to determine how to render feed in view)    
             type:
                  type: string
