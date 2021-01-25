@@ -1,3 +1,5 @@
+<p align="center"><img src="https://github.com/OSSNAPI/Submission-Images/blob/main/logo.png?raw=true" width="200" height="200"></p>
+
 # OpenAPI-spec
 Open API 3.0 spec for creating social networking API
 
