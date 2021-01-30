@@ -1,9 +1,9 @@
 openapi: 3.0.0
 info:
-  version: 1.0.0
-  title: Social Network API
+  version: 1.1.0
+  title: Spec to build your own Social Network API
 servers:
-  - url: 'http://localhost'
+  - url: 'http://ossnsocial.text'
 paths:
 
 ######################### User Collection Starts here #####################
@@ -1303,7 +1303,6 @@ paths:
                                  username: vineed
                             }
                             type: 'follow'
-
                            
             default:
                 description: Unexpected error
