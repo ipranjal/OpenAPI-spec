@@ -1941,7 +1941,7 @@ components:
             # other user in room string for 1-1 and array for group    
             users:
                 oneOf:
-                    - type: string
+                    - type: integer
                     - type: array 
         example:
             id: 12
